@@ -4,7 +4,6 @@ import init, { Client, MessageCallbackInstance, debug } from '@ringsnetwork/ring
 
 import useMultiWeb3 from '../hooks/useMultiWeb3'
 import useBNS from '../hooks/useBNS';
-import useWebsocket from '../hooks/useWebsocket'
 
 import formatAddress from '../utils/formatAddress';
 import { getAddressWithType } from '../utils';
@@ -229,7 +228,6 @@ interface TimerProps {
 const RingsProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const { getBNS } = useBNS()
   const { account, unsignedInfo, signature, provider, addressType } = useMultiWeb3()
-  // const { dispatch: onlinerDispatch } = useWebsocket()
 
   const [turnUrl, setTurnUrl] = useState('')
   const [nodeUrl, setNodeUrl] = useState('')
