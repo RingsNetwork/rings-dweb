@@ -281,6 +281,7 @@ export default function Home() {
               {
                 loading ?
                 <div className='absolute top-0 left-0 flex items-center justify-center w-full h-full transition-all duration-100 bg-black/50 backdrop-blur-sm rounded-br-3xl'>
+                  {/* @ts-ignore */}
                   <SpinnerDotted size={50} thickness={100} speed={100} color="#36ad47" secondaryColor="rgba(57, 172, 145, 0.21)" />
                 </div>:
                 null
