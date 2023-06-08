@@ -7,6 +7,9 @@ const nextConfig = {
     ringsNodeVersion: pkg.dependencies['@ringsnetwork/rings-node'],
     ringsChatVersion: pkg.version,
   },
+  images: {
+    unoptimized: true,
+  },
 }
 
 module.exports = nextConfig
