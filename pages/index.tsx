@@ -277,7 +277,7 @@ export default function Home() {
                 {/* <div className='text-xs text-[var(--inactive-color)] mb-3'>
                   Rings Node
                 </div> */}
-                <div className='mb-2 text-xs text-center'>Rings Node: {publicRuntimeConfig?.ringsNodeVersion}</div>
+                <div className='mb-2 text-xs text-center whitespace-nowrap'>Rings Node: {publicRuntimeConfig?.ringsNodeVersion}</div>
                 <div className='mb-2 text-xs text-center'>
                   Powered by <a href="https://ringsnetwork.io/">Ringsnetwork</a>
                 </div>
@@ -288,7 +288,7 @@ export default function Home() {
             <div className='bg-[var(--theme-bg-color)] flex-grow rounded-br-3xl relative'>
               {
                 active === 'home' ?
-                <div className='text-[var(--theme-color)] px-10 py-5'>
+                <div className='text-[var(--theme-color)] px-8 pt-5'>
                   <div className='mt-0'>
                     <div className='text-center text-[var(--content-title-color)] mb-3'>Rings Network makes Internet more fair, independent and private.</div>
                   </div>
