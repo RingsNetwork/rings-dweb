@@ -61,10 +61,10 @@ const LINKS: LinkProps[] = [
     title: 'BNS .BTC Register',
     link: 'https://app.bns.org',
   },
-  {
-    title: 'Chrome Extension',
-    link: '#',
-  },
+  // {
+  //   title: 'Chrome Extension',
+  //   link: '#',
+  // },
 ]
 
 export default function Home() {
@@ -150,9 +150,8 @@ export default function Home() {
       if (!account) {
         setOpen()
       } else {
-        setActive(app)
-
         if (nodeStatus === 'connected') {
+          setActive(app)
           setLoading(true)
         } else {
           toast({
@@ -317,16 +316,24 @@ export default function Home() {
 
                     {
                       LINKS.map(({ title, link }, index ) => 
-                      <div key={index} className='h-[166px] p-5 text-base rounded-2xl border border-[var(--border-color)] bg-[var(--content-bg)] hover:scale-[1.02] hover:bg-[var(--theme-bg-color)]'> 
-                        <div className='w-full h-full'>
-                          <a className='block w-full h-full' href={link} target="_blank" rel="noopener noreferrer">
-                            {title}
-                          </a>
+                        <div key={index} className='h-[166px] p-5 text-base rounded-2xl border border-[var(--border-color)] bg-[var(--content-bg)] hover:scale-[1.02] hover:bg-[var(--theme-bg-color)]'> 
+                          <div className='w-full h-full'>
+                            <a className='block w-full h-full' href={link} target="_blank" rel="noopener noreferrer">
+                              {title}
+                            </a>
+                          </div>
+                        </div>
+                      )
+                    }
+
+                    <div className='h-[166px] p-5 text-base rounded-2xl border border-[var(--border-color)] bg-[var(--content-bg)]'> 
+                      <div className='w-full h-full'>
+                        Chrome Extension
+                        <div className='mt-5 text-sm font-normal'>
+                          Coming soon
                         </div>
                       </div>
-                    )
-                  }
-
+                    </div>
 
                   </div>
                 </div> :
