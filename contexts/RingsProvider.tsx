@@ -281,6 +281,12 @@ const RingsProvider: React.FC<{ children: React.ReactNode }> = ({ children }) =>
       return 
     }
 
+    if (node) {
+      setNodeStatus('connected')
+
+      return
+    }
+
     try {
       console.group(`findServiceNode`)
       const serviceNodes = await client.lookup_service('ipfs_provider')
@@ -295,7 +301,7 @@ const RingsProvider: React.FC<{ children: React.ReactNode }> = ({ children }) =>
     } catch (e) {
       console.error(e)
     }
-  }, [client, status])
+  }, [client, node, status])
 
   const resolveENS = useCallback(async (peers: string[]) => {
     if (provider) {
@@ -458,9 +464,15 @@ const RingsProvider: React.FC<{ children: React.ReactNode }> = ({ children }) =>
   useEffect(() => {
     const turnUrl = localStorage.getItem('turnUrl') || process.env.NEXT_PUBLIC_TURN_URL!
     const nodeUrl = localStorage.getItem('nodeUrl') || process.env.NEXT_PUBLIC_NODE_URL!
+    const node = localStorage.getItem('serviceNode') || process.env.NEXT_PUBLIC_SERVICE_NODE
 
     setTurnUrl(turnUrl)
     setNodeUrl(nodeUrl)
+
+    if (node) {
+      setNode(node)
+      localStorage.setItem('serviceNode', node)
+    }
 
     localStorage.setItem('turnUrl', turnUrl)
     localStorage.setItem('nodeUrl', nodeUrl)
