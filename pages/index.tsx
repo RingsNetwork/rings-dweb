@@ -14,8 +14,6 @@ import { Button } from "@/components/ui/button"
 import { useToast } from "@/hooks/useToast"
 
 import LOGO from '../assets/logo.png'
-import UniswapLogo from '../assets/uniswap.png'
-import TornadoLogo from '../assets/tornado.svg'
 
 const { publicRuntimeConfig } = getConfig()
 
@@ -193,20 +191,14 @@ export default function Home() {
   return (
     <>
       <Head>
-        <title>RingsNetwork Delab</title>
+        <title>RingsNetwork Delabs</title>
         <meta name="description" content="" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.png" />
       </Head>
-      <main className='flex items-center justify-around w-screen h-screen backdrop-blur-sm'>
-        {/* <div className="fixed top-0 right-0 w-full h-full">
-          <video className='object-cover w-full h-full' width="320" height="240" autoPlay loop muted>
-            <source src="https://assets.codepen.io/3364143/7btrrd.mp4" type="video/mp4" />
-            Your browser does not support the video tag.
-          </video>
-        </div> */}
 
-        <div className='relative bg-[var(--theme-bg-color)] flex flex-col max-w-[1250px] max-h-[860px] w-full h-[90vh] text-base font-bold rounded-3xl'>
+      <main className='flex items-center justify-around w-full h-screen md:w-screen backdrop-blur-sm'>
+        <div className='bg-[var(--theme-bg-color)] flex flex-col md:max-w-[1250px] md:max-h-[860px] w-full h-screen md:h-[90vh] text-base font-bold md:rounded-3xl'>
           {/* header */}
           <div
             className="flex justify-between items-center border-b border-[var(--border-color)] p-[20px] h-[58px]"
@@ -231,11 +223,11 @@ export default function Home() {
           </div>
 
           {/* wrapper */}
-          <div className='flex flex-grow'>
+          <div className='flex flex-col flex-grow md:flex-row'>
             {/* sidebar */}
-            <div className='basis-60 border-r border-[var(--border-color)] p-6 flex-shrink-0 flex flex-col justify-between'>
-              <div className='font-medium text-[15px]'>
-                <div className='text-[var(--inactive-color)] mb-2'>
+            <div className='md:basis-60 md:border-r border-[var(--border-color)] p-6 flex-shrink-0 flex flex-col justify-between'>
+              <div className='flex flex-row md:flex-col font-medium text-[15px]'>
+                <div className='hidden md:block text-[var(--inactive-color)] mb-2'>
                   Home
                 </div>
                 <div
@@ -252,7 +244,7 @@ export default function Home() {
                   Home
                 </div>
 
-                <div className='text-[var(--inactive-color)] mb-2 mt-5'>
+                <div className='hidden md:block text-[var(--inactive-color)] mb-2 mt-5'>
                   dWeb
                 </div>
                 <div 
@@ -272,7 +264,7 @@ export default function Home() {
                 </div>
               </div>
 
-              <div className='font-light'>
+              <div className='hidden font-light md:block'>
                 {/* <div className='text-xs text-[var(--inactive-color)] mb-3'>
                   Rings Node
                 </div> */}
@@ -284,14 +276,14 @@ export default function Home() {
 
             </div>
             {/* content */}
-            <div className='bg-[var(--theme-bg-color)] flex-grow rounded-br-3xl relative'>
+            <div className='bg-[var(--theme-bg-color)] flex-grow md:rounded-br-3xl relative'>
               {
                 active === 'home' ?
                 <div className='text-[var(--theme-color)] px-8 pt-5'>
                   <div className='mt-0'>
                     <div className='text-center text-[var(--content-title-color)] mb-3'>Rings Network makes Internet more fair, independent and private.</div>
                   </div>
-                  <div className='grid grid-cols-3 gap-4'>
+                  <div className='grid grid-cols-1 gap-4 md:grid-cols-3'>
 
                     <div className='p-5 text-base rounded-2xl border border-[var(--border-color)] bg-[var(--content-bg)]'> 
                       <div>Decentralized P2P</div>
@@ -316,7 +308,7 @@ export default function Home() {
 
                     {
                       LINKS.map(({ title, link }, index ) => 
-                        <div key={index} className='h-[166px] p-5 text-base rounded-2xl border border-[var(--border-color)] bg-[var(--content-bg)] hover:scale-[1.02] hover:bg-[var(--theme-bg-color)]'> 
+                        <div key={index} className='md:h-[166px] p-5 text-base rounded-2xl border border-[var(--border-color)] bg-[var(--content-bg)] hover:scale-[1.02] hover:bg-[var(--theme-bg-color)]'> 
                           <div className='w-full h-full'>
                             <a className='block w-full h-full' href={link} target="_blank" rel="noopener noreferrer">
                               {title}
@@ -326,7 +318,7 @@ export default function Home() {
                       )
                     }
 
-                    <div className='h-[166px] p-5 text-base rounded-2xl border border-[var(--border-color)] bg-[var(--content-bg)]'> 
+                    <div className='h-[100px] mb-5 md:mb-0 md:h-[166px] p-5 text-base rounded-2xl border border-[var(--border-color)] bg-[var(--content-bg)]'> 
                       <div className='w-full h-full'>
                         Chrome Extension
                         <div className='mt-5 text-sm font-normal'>
@@ -341,17 +333,17 @@ export default function Home() {
               }
               {
                 active === 'uniswap' ?
-                <iframe className='rounded-br-3xl' onLoad={handleUniswapIframeOnload} id="uniswap" width="100%" height="100%" src="/uniswap"></iframe> :
+                <iframe className='md:rounded-br-3xl' onLoad={handleUniswapIframeOnload} id="uniswap" width="100%" height="100%" src="/uniswap"></iframe> :
                 null
               }
               {
                 active === 'tornadocash' ?
-                <iframe className='rounded-br-3xl' onLoad={handleIframeOnload} id="tornadocash" width="100%" height="100%" src="tornadocash"></iframe> :
+                <iframe className='md:rounded-br-3xl' onLoad={handleIframeOnload} id="tornadocash" width="100%" height="100%" src="tornadocash"></iframe> :
                 null
               }
               {
                 loading ?
-                <div className='absolute top-0 left-0 flex items-center justify-center w-full h-full transition-all duration-100 bg-black/50 backdrop-blur-sm rounded-br-3xl'>
+                <div className='absolute top-0 left-0 flex items-center justify-center w-full h-full transition-all duration-100 bg-black/50 backdrop-blur-sm md:rounded-br-3xl'>
                   {/* @ts-ignore */}
                   <SpinnerDotted size={50} thickness={100} speed={100} color="#36ad47" secondaryColor="rgba(57, 172, 145, 0.21)" />
                 </div>:

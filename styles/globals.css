@@ -44,13 +44,11 @@
 }
 
 html {
-  box-sizing: border-box;
   -webkit-font-smoothing: antialiased;
 }
 
 body {
   font-family: var(--body-font);
-  /* background-image: url(https://wallpapershome.com/images/wallpapers/macos-big-sur-1280x720-dark-wwdc-2020-22655.jpg); */
   background-image: url('../assets/bg.svg');
   background-size: cover;
   background-position: center;
@@ -60,11 +58,10 @@ body {
   flex-direction: column;
   width: 100%;
   min-height: 100vh;
-  box-sizing: border-box;
+  background-color: #2B4C6D;
 }
 
-[data-theme="light"] body:before,
-[data-theme="light"] body .video-bg:before {
+[data-theme="light"] body:before {
  content: "";
  position: absolute;
  left: 0;
@@ -82,15 +79,15 @@ body {
 ::-webkit-scrollbar {
  width: 6px;
  border-radius: 10px;
-}
+} 
 
 ::-webkit-scrollbar-thumb {
  background: var(--scrollbar-bg);
  border-radius: 10px;
-}
+} 
 
-@media screen and (max-width: 480px) {
+/* @media screen and (max-width: 480px) {
   body {
     padding: 0.8em;
   }
- }
+ } */
