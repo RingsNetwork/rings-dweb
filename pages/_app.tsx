@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, type EffectCallback } from 'react'
 import type { AppProps } from 'next/app'
 import { ThemeProvider } from 'next-themes'
 import { useRouter } from 'next/router'
@@ -12,10 +12,15 @@ import MultiWeb3Provider from '../contexts/MultiWeb3Provider'
 
 import '@/styles/globals.css'
 
+function useEffectOnce(effect: EffectCallback) {
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  useEffect(effect, [])
+}
+
 export default function App({ Component, pageProps }: AppProps) {
   const router = useRouter()
 
-  useEffect(() => {
+  useEffectOnce(() => {
     if (typeof window !== 'undefined') {
       if ('serviceWorker' in navigator) {
         navigator.serviceWorker.register('sw.js')
@@ -29,7 +34,7 @@ export default function App({ Component, pageProps }: AppProps) {
                 }
               };
             } else if (reg.active) {
-              onward()
+              // onward()
             }
           }).catch(error => console.error(error))
 
@@ -38,11 +43,11 @@ export default function App({ Component, pageProps }: AppProps) {
           setTimeout(function () {
             // window.location.reload()
             router.push('/')
-          }, 0);
+          }, 0)
         }
       }
     }
-  }, [router])
+  })
 
   return (
     <ThemeProvider attribute='class' defaultTheme='light'>

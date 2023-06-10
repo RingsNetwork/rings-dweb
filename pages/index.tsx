@@ -174,7 +174,7 @@ export default function Home() {
       const timer: ReturnType<typeof setInterval> = setInterval(() => {
         if (iframe.contentDocument) {
           // document has a right padding 
-          iframe.contentDocument.documentElement.style.overflow = 'hidden'
+          iframe.contentDocument.documentElement.style.overflowX = 'hidden'
 
           // @ts-ignore
           if (iframe.contentWindow &&  iframe.contentWindow.$nuxt && iframe.contentDocument.querySelector('#__layout')) {
@@ -197,8 +197,8 @@ export default function Home() {
         <link rel="icon" href="/favicon.png" />
       </Head>
 
-      <main className='flex items-center justify-around w-full h-screen md:w-screen backdrop-blur-sm'>
-        <div className='bg-[var(--theme-bg-color)] flex flex-col md:max-w-[1250px] md:max-h-[860px] w-full h-screen md:h-[90vh] text-base font-bold md:rounded-3xl'>
+      <main className='flex items-center justify-around w-full min-h-screen md:h-screen md:w-screen backdrop-blur-sm'>
+        <div className='bg-[var(--theme-bg-color)] flex flex-col md:max-w-[1250px] md:max-h-[860px] w-full min-h-screen md:min-h-[90vh] md:h-[90vh] text-base font-bold md:rounded-3xl'>
           {/* header */}
           <div
             className="flex justify-between items-center border-b border-[var(--border-color)] p-[20px] h-[58px]"
@@ -248,7 +248,7 @@ export default function Home() {
                   dWeb
                 </div>
                 <div 
-                  className={`flex items-center my-1 py-2 px-3 text-sm rounded-md cursor-pointer duration-300 hover:bg-[var(--hover-menu-bg)]${active === 'uniswap' ? ' bg-[var(--hover-menu-bg)]': ''}`}
+                  className={`flex items-center md:my-1 py-2 px-3 mx-2 h-full md:mx-0 text-sm rounded-md cursor-pointer duration-300 hover:bg-[var(--hover-menu-bg)]${active === 'uniswap' ? ' bg-[var(--hover-menu-bg)]': ''}`}
                   onClick={() => handleSwitchApp('uniswap')}
                 >
                   {/* <Image className='w-8 mr-1' src={UniswapLogo} alt="" /> */}
@@ -333,12 +333,12 @@ export default function Home() {
               }
               {
                 active === 'uniswap' ?
-                <iframe className='md:rounded-br-3xl' onLoad={handleUniswapIframeOnload} id="uniswap" width="100%" height="100%" src="/uniswap"></iframe> :
+                <iframe className='min-h-[calc(100vh-142px)] md:rounded-br-3xl' onLoad={handleUniswapIframeOnload} id="uniswap" width="100%" height="100%" src="/uniswap"></iframe> :
                 null
               }
               {
                 active === 'tornadocash' ?
-                <iframe className='md:rounded-br-3xl' onLoad={handleIframeOnload} id="tornadocash" width="100%" height="100%" src="tornadocash"></iframe> :
+                <iframe className='min-h-[calc(100vh-142px)] md:rounded-br-3xl' onLoad={handleIframeOnload} id="tornadocash" width="100%" height="100%" src="tornadocash"></iframe> :
                 null
               }
               {

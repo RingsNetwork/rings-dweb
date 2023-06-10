@@ -1908,10 +1908,10 @@
     ethers "^5.6.2"
     js-sha3 "^0.8.0"
 
-"@ringsnetwork/rings-node@0.2.5-dev-20230331.0":
-  version "0.2.5-dev-20230331.0"
-  resolved "https://registry.yarnpkg.com/@ringsnetwork/rings-node/-/rings-node-0.2.5-dev-20230331.0.tgz#3fb5b915bce769a576b6d34bf3a0ad47d6041976"
-  integrity sha512-ERov+MHFNUy+rUQB1OpnU2DUZ6u2oCqrZVEq2gNVg4QuMraDRVp064xYq/pJHvD21cQWLvhEzYRB4nbr1OvCFg==
+"@ringsnetwork/rings-node@0.2.5-dev-20230411.0":
+  version "0.2.5-dev-20230411.0"
+  resolved "https://registry.yarnpkg.com/@ringsnetwork/rings-node/-/rings-node-0.2.5-dev-20230411.0.tgz#b73088a356ece8c7a02145457d58afe16f65ad4c"
+  integrity sha512-uP6m5mrEiNOT+YXs1eOgCghoYtYJjBXtCBAYtq3n98u5f3ekzUATaNKO+Ht7qq0IZZj5+pK7ihQMqCsCLsRjSA==
 
 "@rushstack/eslint-patch@^1.1.3":
   version "1.2.0"
