@@ -5,6 +5,7 @@ import { SpinnerRoundFilled, SpinnerDotted } from 'spinners-react'
 import Head from 'next/head'
 import Image from 'next/image';
 import getConfig from 'next/config';
+import Script from 'next/script'
 
 import useRings from '../hooks/useRings'
 import useMultiWeb3 from '../hooks/useMultiWeb3';

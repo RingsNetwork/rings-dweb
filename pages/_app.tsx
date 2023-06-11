@@ -20,6 +20,14 @@ function useEffectOnce(effect: EffectCallback) {
 export default function App({ Component, pageProps }: AppProps) {
   const router = useRouter()
 
+  useEffect(() => {
+    if (router.query.eruda) {
+      const eruda = require('eruda')
+
+      eruda.init()
+    }
+  }, [router.query])
+
   useEffectOnce(() => {
     if (typeof window !== 'undefined') {
       if ('serviceWorker' in navigator) {
