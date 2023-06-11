@@ -334,12 +334,12 @@ export default function Home() {
               }
               {
                 active === 'uniswap' ?
-                <iframe className='min-h-[calc(100vh-142px)] md:rounded-br-3xl' onLoad={handleUniswapIframeOnload} id="uniswap" width="100%" height="100%" src="/uniswap"></iframe> :
+                <iframe className='min-h-[calc(100vh-142px)] md:min-h-[calc(90vh-58px)] md:rounded-br-3xl' onLoad={handleUniswapIframeOnload} id="uniswap" width="100%" height="100%" src="/uniswap"></iframe> :
                 null
               }
               {
                 active === 'tornadocash' ?
-                <iframe className='min-h-[calc(100vh-142px)] md:rounded-br-3xl' onLoad={handleIframeOnload} id="tornadocash" width="100%" height="100%" src="tornadocash"></iframe> :
+                <iframe className='min-h-[calc(100vh-142px)] md:min-h-[calc(90vh-58px)] md:rounded-br-3xl' onLoad={handleIframeOnload} id="tornadocash" width="100%" height="100%" src="tornadocash"></iframe> :
                 null
               }
               {
