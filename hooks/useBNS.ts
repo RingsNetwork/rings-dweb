@@ -1,12 +1,14 @@
 import { useState, useEffect, useCallback } from 'react'
-import { useWeb3React } from '@web3-react/core'
+import {
+  useProvider,
+} from 'wagmi'
 // @ts-ignore
 import { normalize } from '@ensdomains/eth-ens-namehash'
 
 import { setupENS, ENS } from '@ringsnetwork/bns-util'
 
 const useBNS = () => {
-  const { provider } = useWeb3React()
+  const provider = useProvider()
 
   const [bns, setBNS] = useState<ENS | null>(null)
 

@@ -218,7 +218,7 @@ const reducer = (state: StateProps, { type, payload }: { type: string, payload: 
 }
 
 interface MessageProps {
-  [key: string]: number | string | null
+  [key: string]: object | null // number | string | null
 }
 
 interface TimerProps {
@@ -431,30 +431,18 @@ const RingsProvider: React.FC<{ children: React.ReactNode }> = ({ children }) =>
         )
         console.log(`txId`, txId)
 
-        MESSAGE.current[txId as string] = 'pending' 
+        MESSAGE.current[txId as string] =  null
     
-        let current = 0
-
-        const interval = 1000
-        // const timeout = 60 * 1000
+        const interval = 5
 
         TIMER.current[txId as string] = setInterval(() => {
-          if (MESSAGE.current[txId as string] !== 'pending') {
+          if (MESSAGE.current[txId as string]) {
             clearInterval(TIMER.current[txId as string])
             delete TIMER.current[txId as string]
 
             resolve(MESSAGE.current[txId as string])
             delete MESSAGE.current[txId as string]
           }
-
-          // current += interval
-
-          // if (current > timeout) {
-          //   clearInterval(TIMER.current[txId as string])
-          //   delete TIMER.current[txId as string]
-
-          //   reject(new Error('TIMEOUT'))
-          // }
         } , interval)
     } catch (e) {
       reject(e)
@@ -567,7 +555,7 @@ const RingsProvider: React.FC<{ children: React.ReactNode }> = ({ children }) =>
           const { tx_id } = response
           console.log(`txId`, tx_id)
           console.log(`message`, message)
-          if (MESSAGE.current[tx_id] === 'pending') {
+          if (!MESSAGE.current[tx_id]) {
             // const { http_server } = JSON.parse(new TextDecoder().decode(message))
             // console.log(`json`, http_server)
             if (message) {
@@ -579,9 +567,9 @@ const RingsProvider: React.FC<{ children: React.ReactNode }> = ({ children }) =>
               }
 
               const parsedBody = new TextDecoder().decode(new Uint8Array(body))
-              console.log(`parsed`, {...rest, headers: parsedHeaders, body: parsedBody })
 
-              MESSAGE.current[tx_id] = JSON.stringify({ ...rest, headers: parsedHeaders, body: parsedBody })
+              // MESSAGE.current[tx_id] = JSON.stringify({ ...rest, headers: parsedHeaders, body: parsedBody, rawBody: body })
+              MESSAGE.current[tx_id] = { ...rest, headers: parsedHeaders, body: parsedBody, rawBody: body }
             }
           }
           console.groupEnd()
@@ -607,22 +595,30 @@ const RingsProvider: React.FC<{ children: React.ReactNode }> = ({ children }) =>
         setStatus('connected')
         // await client.connect_peer_via_http(nodeUrl)
       } catch (e) {
-        console.error(e)
+        console.log('connect_peer_via_http error', e)
       }
 
-      return () => {
-        setStatus('disconnected')
-      }
+      return client
     }
   }, [account, wasm, turnUrl, nodeUrl, signature, unsignedInfo])
 
   useEffect(() => {
+    let client : Client | null = null
+
     if (account && wasm && turnUrl && nodeUrl && signature && unsignedInfo) {
       try {
-        initClient()
+        initClient().then(c => {
+          client = c
+        })
       } catch (e) {
         console.log(`error`, e)
         setStatus('failed')
+      }
+    }
+
+    return () => {
+      if (client) {
+        client.disconnect_all()
       }
     }
   }, [account, wasm, turnUrl, nodeUrl, initClient, signature, unsignedInfo])

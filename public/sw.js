@@ -6,7 +6,7 @@ const ACTION = {
   FETCH_RESOURCE_DONE: 'FETCH_RESOURCE_DONE',
 }
 
-const RINGS_CACHE = 'RINGS_CACHE_V1'
+const RINGS_CACHE = 'RINGS_CACHE_V3'
 
 const TIMER = {}
 
@@ -24,7 +24,8 @@ const isStaticResource = (url) => {
       url.includes('.png') ||
       url.includes('.svg') ||
       url.includes('.gif') ||
-      url.includes('.ico'))
+      url.includes('.ico') ||
+      url.includes('.gz'))
   )
 }
 
@@ -41,10 +42,7 @@ const asyncSendMessage = (message) =>
       client.postMessage({...message, uuid, type: 'asyncSend'})
     )
 
-    let current = 0
-
-    const interval = 1000
-    // const timeout = 60 * 1000
+    const interval = 5
 
     TIMER[uuid] = setInterval(() => {
       if (MESSAGE[uuid]) {
@@ -54,15 +52,6 @@ const asyncSendMessage = (message) =>
         resolve(MESSAGE[uuid])
         delete MESSAGE[uuid]
       }
-
-      // current += interval
-
-      // if (current > timeout) {
-      //   clearInterval(TIMER[uuid])
-      //   delete TIMER[uuid]
-
-      //   reject(new Error('TIMEOUT'))
-      // }
     }, interval)
   })
 
@@ -91,9 +80,9 @@ const getUniswapIndex = async () => {
     action: ACTION.FETCH_UNISWAP_INDEX,
     path: 'index.html',
   })
-  const {body, headers, status} = JSON.parse(response)
+  const {body, headers, status} = response
   const options = {
-    statusText: 'I am a custom service worker response!',
+    statusText: 'A Rings Network response!',
     status,
     headers,
   }
@@ -106,9 +95,9 @@ const getUniswapResource = async (path) => {
     action: ACTION.FETCH_UNISWAP_RESOURCE,
     path,
   })
-  const {body, headers, status} = JSON.parse(response)
+  const {body, headers, status} = response
   const options = {
-    statusText: 'I am a custom service worker response!',
+    statusText: 'A Rings Network response!',
     status,
     headers,
   }
@@ -121,9 +110,9 @@ const getTornadoCashIndex = async () => {
     action: ACTION.FETCH_TORNADOCASH_INDEX,
     path: 'index.html',
   })
-  const {body, headers, status} = JSON.parse(response)
+  const {body, headers, status} = response
   const options = {
-    statusText: 'I am a custom service worker response!',
+    statusText: 'A Rings Network response!',
     status,
     headers,
   }
@@ -136,14 +125,17 @@ const getTornadoCashResource = async (path) => {
     action: ACTION.FETCH_TORNADOCASH_RESOURCE,
     path,
   })
-  const {body, headers, status} = JSON.parse(response)
+  const {body, headers, status, rawBody} = response
   const options = {
-    statusText: 'I am a custom service worker response!',
+    statusText: 'A Rings Network response!',
     status,
     headers,
   }
 
-  return new Response(body, options)
+  // .gz file shoud return raw body
+  const isGz = headers['x-ipfs-path'] && headers['x-ipfs-path'].endsWith('.gz')
+
+  return new Response(isGz ? rawBody : body, options)
 }
 
 // Here comes the install event!
@@ -179,6 +171,7 @@ self.addEventListener('fetch', async function (event) {
     request: {url, referrer},
   } = event
   const {pathname} = new URL(url)
+  // console.log(event.request)
   // console.log(`url`, url)
   // console.log(`pathname`, pathname)
 
@@ -202,7 +195,16 @@ self.addEventListener('fetch', async function (event) {
     )
 
     return
-  } else if (referrer.includes('/tornadocash') && isStaticResource(url)) {
+    // } else if (
+    //   url.includes('tornado.json.gz') ||
+    //   url.includes('tornadoProvingKey.bin.gz')
+    // ) {
+    //   event.respondWith(getTornadoCashResource(pathname))
+  } else if (
+    url.includes('tornado.json.gz') ||
+    url.includes('tornadoProvingKey.bin.gz') ||
+    (referrer.includes('/tornadocash') && isStaticResource(url))
+  ) {
     event.respondWith(
       caches.open(RINGS_CACHE).then((cache) =>
         cache.match(event.request).then((cachedResponse) => {
@@ -232,7 +234,9 @@ self.addEventListener('fetch', async function (event) {
             return (
               cachedResponse ||
               getUniswapIndex().then((fetchedResponse) => {
-                cache.put(event.request, fetchedResponse.clone())
+                if (fetchedResponse.ok) {
+                  cache.put(event.request, fetchedResponse.clone())
+                }
 
                 return fetchedResponse
               })
@@ -253,7 +257,9 @@ self.addEventListener('fetch', async function (event) {
             return (
               cachedResponse ||
               getTornadoCashIndex().then((fetchedResponse) => {
-                cache.put(event.request, fetchedResponse.clone())
+                if (fetchedResponse.ok) {
+                  cache.put(event.request, fetchedResponse.clone())
+                }
 
                 return fetchedResponse
               })

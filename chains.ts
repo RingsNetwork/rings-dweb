@@ -48,12 +48,6 @@ export const CHAINS: { [chainId: number]: BasicChainInformation | ExtendedChainI
     ),
     name: 'Ropsten',
   },
-  // 4: {
-  //   urls: [process.env.infuraKey ? `https://rinkeby.infura.io/v3/${process.env.infuraKey}` : undefined].filter(
-  //     (url) => url !== undefined
-  //   ),
-  //   name: 'Rinkeby',
-  // },
   5: {
     urls: [process.env.infuraKey ? `https://goerli.infura.io/v3/${process.env.infuraKey}` : undefined].filter(
       (url) => url !== undefined

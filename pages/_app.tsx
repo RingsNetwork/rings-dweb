@@ -1,11 +1,54 @@
-import { useEffect, type EffectCallback } from 'react'
+import { useEffect, useState, type EffectCallback } from 'react'
 import type { AppProps } from 'next/app'
 import { ThemeProvider } from 'next-themes'
 import { useRouter } from 'next/router'
 
+import {
+  EthereumClient,
+  w3mConnectors,
+  w3mProvider,
+} from "@web3modal/ethereum";
+import { Web3Modal } from "@web3modal/react";
+
+import { WagmiConfig, createClient, configureChains, mainnet } from 'wagmi'
+ 
+import { publicProvider } from 'wagmi/providers/public'
+ 
+import { MetaMaskConnector } from 'wagmi/connectors/metaMask'
+import { WalletConnectConnector } from 'wagmi/connectors/walletConnect'
+
+const projectId = process.env.NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID!
+
+const chains = [
+  mainnet,
+];
+ 
+const { provider } = configureChains(chains, [w3mProvider({ projectId })]);
+
+const client = createClient({
+  autoConnect: false,
+  connectors: w3mConnectors({ version: 1, chains, projectId }),
+  provider,
+});
+ 
+// const client = createClient({
+//   autoConnect: false,
+//   connectors: [
+//     new MetaMaskConnector({ chains }),
+//     new WalletConnectConnector({
+//       chains,
+//       options: {
+//         projectId,
+//       },
+//     }),
+//   ],
+//   provider,
+// })
+
+const ethereumClient = new EthereumClient(client, chains);
+
 import { Toaster } from "@/components/ui/toaster"
 
-import Web3Provider from '../contexts/Web3Provider'
 import RingsProvider from '../contexts/RingsProvider'
 import SolanaProvider from '../contexts/SolanaProvider'
 import MultiWeb3Provider from '../contexts/MultiWeb3Provider'
@@ -19,6 +62,7 @@ function useEffectOnce(effect: EffectCallback) {
 
 export default function App({ Component, pageProps }: AppProps) {
   const router = useRouter()
+  const [ready, setReady] = useState(false)
 
   useEffect(() => {
     if (router.query.eruda) {
@@ -27,6 +71,11 @@ export default function App({ Component, pageProps }: AppProps) {
       eruda.init()
     }
   }, [router.query])
+
+
+  useEffect(() => {
+    setReady(true);
+  }, []);
 
   useEffectOnce(() => {
     if (typeof window !== 'undefined') {
@@ -59,16 +108,19 @@ export default function App({ Component, pageProps }: AppProps) {
 
   return (
     <ThemeProvider attribute='class' defaultTheme='light'>
-      <Web3Provider>
-          <SolanaProvider>
-            <MultiWeb3Provider>
-              <RingsProvider>
-                <Component {...pageProps} />
-                <Toaster />
-              </RingsProvider>
-            </MultiWeb3Provider>
-          </SolanaProvider>
-        </Web3Provider>
+      {ready ? (
+      <WagmiConfig client={client}>
+        <SolanaProvider>
+          <MultiWeb3Provider>
+            <RingsProvider>
+              <Component {...pageProps} />
+              <Toaster />
+            </RingsProvider>
+          </MultiWeb3Provider>
+        </SolanaProvider>
+      </WagmiConfig>): null}
+
+      <Web3Modal projectId={projectId} ethereumClient={ethereumClient} />
     </ThemeProvider>
   )
 }

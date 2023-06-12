@@ -1,17 +1,20 @@
-import { useEffect, useCallback, useState } from 'react';
+import { useEffect, useCallback, useState, useRef } from 'react';
 
 import { SpinnerRoundFilled, SpinnerDotted } from 'spinners-react'
 
 import Head from 'next/head'
 import Image from 'next/image';
 import getConfig from 'next/config';
-import Script from 'next/script'
+
+import { Web3Button } from "@web3modal/react"
 
 import useRings from '../hooks/useRings'
 import useMultiWeb3 from '../hooks/useMultiWeb3';
 
 import ThemeSwitch from '@/components/ThemeSwitch'
 import { Button } from "@/components/ui/button"
+import { ToastAction } from "@/components/ui/toast"
+
 import { useToast } from "@/hooks/useToast"
 
 import LOGO from '../assets/logo.png'
@@ -84,8 +87,8 @@ export default function Home() {
     if (typeof window !== 'undefined' && 'serviceWorker' in navigator) {
       //listen to messages
       navigator.serviceWorker.onmessage = async (event) => {
+        console.log(`event.data`, event.data)
         if (node && event.data.type === 'asyncSend') {
-          console.log(event.data)
           let data
 
           switch (event.data.action) {
@@ -116,7 +119,6 @@ export default function Home() {
                 path: `${APP['tornado.cash']}/index.html`,
                 headers: {}
               })
-              console.log(`data`, JSON.parse(data))
               break
             case 'FETCH_TORNADOCASH_RESOURCE':
               data = await asyncSendMessage({
@@ -143,11 +145,27 @@ export default function Home() {
     }
   }, [sendMsg, state.peerMap, asyncSendMessage, node])
 
+  const handleOpenInChrome = () => {
+    const universalLink = `googlechrome://${encodeURIComponent(window.location.href)}`
+
+
+    window.location.href = universalLink
+  }
+
   const handleSwitchApp = useCallback((app: string) => {
+    if (typeof window !== 'undefined' && !navigator.serviceWorker) {
+      toast({
+        description: "This feature is not available in your current browser. Please open the link in Chrome to access all functionalities.",
+        action: <ToastAction onClick={handleOpenInChrome} altText="Open in chrome">Open in chrome</ToastAction>
+      })
+
+      return
+    }
 
     if (['uniswap', 'tornadocash'].includes(app)) {
       if (!account) {
-        setOpen()
+        // setOpen()
+        document.querySelector('w3m-core-button')?.shadowRoot?.children[0]?.shadowRoot?.children[0]?.shadowRoot?.querySelector('button')?.click()
       } else {
         if (nodeStatus === 'connected') {
           setActive(app)
@@ -162,7 +180,7 @@ export default function Home() {
       setActive(app)
       setLoading(false)
     }
-  }, [account, setOpen, nodeStatus, toast] )
+  }, [account, nodeStatus, toast] )
 
   const handleUniswapIframeOnload = useCallback(() => {
     setLoading(false)
@@ -194,7 +212,7 @@ export default function Home() {
       <Head>
         <title>RingsNetwork Delabs</title>
         <meta name="description" content="" />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,shrink-to-fit=no" />
         <link rel="icon" href="/favicon.png" />
       </Head>
 
@@ -207,7 +225,17 @@ export default function Home() {
             <div className='w-[180px] md:w-[228px] flex items-center'>
               <Image src={LOGO} alt="" />
             </div>
-            {
+            <div className='flex items-center'>
+              {
+                account ?
+                node && nodeStatus === 'connected' ?
+                <SpinnerRoundFilled size={45} thickness={45} speed={60} color="#36ad47" />:
+                <SpinnerRoundFilled size={45} thickness={45} speed={130} color="rgba(195, 40, 42, 1)" /> :
+                null
+              }
+              <Web3Button label="Connect Wallet" icon="hide" />
+            </div>
+            {/* {
               account ? 
               <div className='flex items-center'>
                 {
@@ -220,7 +248,7 @@ export default function Home() {
                 </div>
               </div>:
               <Button onClick={setOpen}>Connect Wallet</Button>
-            }
+            } */}
           </div>
 
           {/* wrapper */}
@@ -339,14 +367,14 @@ export default function Home() {
               }
               {
                 active === 'tornadocash' ?
-                <iframe className='min-h-[calc(100vh-142px)] md:min-h-[calc(90vh-58px)] md:rounded-br-3xl' onLoad={handleIframeOnload} id="tornadocash" width="100%" height="100%" src="tornadocash"></iframe> :
+                <iframe className='min-h-[calc(100vh-142px)] md:min-h-[calc(90vh-58px)] md:rounded-br-3xl' onLoad={handleIframeOnload} id="tornadocash" width="100%" height="100%" src="tornadocash"></iframe> :  
                 null
               }
               {
                 loading ?
                 <div className='absolute top-0 left-0 flex items-center justify-center w-full h-full transition-all duration-100 bg-black/50 backdrop-blur-sm md:rounded-br-3xl'>
                   {/* @ts-ignore */}
-                  <SpinnerDotted size={50} thickness={100} speed={100} color="#36ad47" secondaryColor="rgba(57, 172, 145, 0.21)" />
+                  <SpinnerDotted size={50} thickness={100} speed={100} color="#36ad47" secondarycolor="rgba(57, 172, 145, 0.21)" />
                 </div>:
                 null
               }
