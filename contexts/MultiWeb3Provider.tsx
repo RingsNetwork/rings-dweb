@@ -10,7 +10,7 @@ import {
 } from 'wagmi'
 import { signMessage } from 'wagmi/actions'
 
-import { UnsignedInfo } from '@ringsnetwork/rings-node'
+import { useRings, Chain, UnsignedInfo } from '@ringsnetwork/rings-provider'
 
 import { useWallet } from '../contexts/SolanaWalletProvider'
 import formatAddress from '../utils/formatAddress';
@@ -86,6 +86,8 @@ const MultiWeb3Provider: React.FC<{ children: React.ReactNode }> = ({ children }
 
   const { wallet, connected } = useWallet()
 
+  const { createUnsignedInfo } = useRings()
+
   const [account, setAccount] = useState('')
   const [chain, setChain] = useState('')
   const [signature, setSignature] = useState<Uint8Array | null>(null)
@@ -105,6 +107,7 @@ const MultiWeb3Provider: React.FC<{ children: React.ReactNode }> = ({ children }
     }
   }, [ensName, address])
 
+
   useEffect(() => {
     // console.group('multi')
     //   console.log(`ethereumAccount:`, address);
@@ -117,7 +120,7 @@ const MultiWeb3Provider: React.FC<{ children: React.ReactNode }> = ({ children }
       setAccountName(formatAddress(address))
 
       const getEthereumSignature = async () => {
-        const unsignedInfo = new UnsignedInfo(address);
+        const unsignedInfo = createUnsignedInfo({ address })
         const signed = await signMessage({
           message: unsignedInfo.auth,
         })
@@ -136,7 +139,7 @@ const MultiWeb3Provider: React.FC<{ children: React.ReactNode }> = ({ children }
       setAddressType(ADDRESS_TYPE.ED25519)
 
       const getSolanaSignature = async () => {
-        const unsignedInfo = UnsignedInfo.new_with_address(pubKey, ADDRESS_TYPE.ED25519);
+        const unsignedInfo =createUnsignedInfo({ address: pubKey, chain: Chain.SOLANA })
         const data = new TextEncoder().encode(unsignedInfo.auth);
         const signature = await wallet.signMessage(data, 'utf8');
   

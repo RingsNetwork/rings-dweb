@@ -1956,6 +1956,17 @@
   resolved "https://registry.yarnpkg.com/@ringsnetwork/rings-node/-/rings-node-0.2.5-dev-20230419.0.tgz#bb9aec3fae589d173c1acac872c2a9316185e70e"
   integrity sha512-16u9XFN7r9pKZOwIz3VB46cQbo8MsG26iwDhVBPK4btT3MBvnunLH4ZV3D5h1YqWM9RiptUj4qxxOBIB1TZQcQ==
 
+"@ringsnetwork/rings-provider@^0.1.0":
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/@ringsnetwork/rings-provider/-/rings-provider-0.1.0.tgz#d47a7dd5b58e6a228fb335906c6e249561fe374c"
+  integrity sha512-vd3IueCc7/CO8fAMp5cMe9I7GAyyNIgndWYHmAXB56xnF1Eqhg9l0yWvk0RsujpvZRqqJA8sITS+2xF0V/7tcw==
+  dependencies:
+    "@ringsnetwork/bns-util" "0.9.1"
+    "@ringsnetwork/rings-node" "0.2.5-dev-20230419.0"
+    react "^18.2.0"
+    react-dom "^18.2.0"
+    wagmi "^0.12.12"
+
 "@rushstack/eslint-patch@^1.1.3":
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/@rushstack/eslint-patch/-/eslint-patch-1.2.0.tgz#8be36a1f66f3265389e90b5f9c9962146758f728"
@@ -11320,7 +11331,7 @@ raw-body@2.5.2, raw-body@^2.4.1:
     iconv-lite "0.4.24"
     unpipe "1.0.0"
 
-react-dom@18.2.0:
+react-dom@18.2.0, react-dom@^18.2.0:
   version "18.2.0"
   resolved "https://registry.yarnpkg.com/react-dom/-/react-dom-18.2.0.tgz#22aaf38708db2674ed9ada224ca4aa708d821e3d"
   integrity sha512-6IMTriUmvsjHUjNtEDudZfuDQUoWXVxKHhlEGSk81n4YFS+r/Kl99wXiwlVXtPBtJenozv2P+hxDsw9eA7Xo6g==
@@ -11361,7 +11372,7 @@ react-style-singleton@^2.2.1:
     invariant "^2.2.4"
     tslib "^2.0.0"
 
-react@18.2.0:
+react@18.2.0, react@^18.2.0:
   version "18.2.0"
   resolved "https://registry.yarnpkg.com/react/-/react-18.2.0.tgz#555bd98592883255fa00de14f1151a917b5d77d5"
   integrity sha512-/3IjMdb2L9QbBdWiW5e3P2/npwMBaU9mHCSCUzNln0ZCYbcfTsGbTJrU/kGemdH2IWmB2ioZ+zkxtmq6g09fGQ==

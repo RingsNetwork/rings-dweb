@@ -16,6 +16,7 @@ const MESSAGE = {}
 const isStaticResource = (url) => {
   return (
     !url.includes('favicon') &&
+    // !url.includes('service-worker.js') &&
     (/.css$/.test(url) ||
       /.js$/.test(url) ||
       url.includes('.woff') ||
@@ -42,7 +43,7 @@ const asyncSendMessage = (message) =>
       client.postMessage({...message, uuid, type: 'asyncSend'})
     )
 
-    const interval = 5
+    const interval = 10
 
     TIMER[uuid] = setInterval(() => {
       if (MESSAGE[uuid]) {

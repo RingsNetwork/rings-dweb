@@ -11,11 +11,12 @@ import {
 import { Web3Modal } from "@web3modal/react";
 
 import { WagmiConfig, createClient, configureChains, mainnet } from 'wagmi'
+import RingsProvider from '@ringsnetwork/rings-provider'
  
-import { publicProvider } from 'wagmi/providers/public'
+// import { publicProvider } from 'wagmi/providers/public'
  
-import { MetaMaskConnector } from 'wagmi/connectors/metaMask'
-import { WalletConnectConnector } from 'wagmi/connectors/walletConnect'
+// import { MetaMaskConnector } from 'wagmi/connectors/metaMask'
+// import { WalletConnectConnector } from 'wagmi/connectors/walletConnect'
 
 const projectId = process.env.NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID!
 
@@ -49,7 +50,7 @@ const ethereumClient = new EthereumClient(client, chains);
 
 import { Toaster } from "@/components/ui/toaster"
 
-import RingsProvider from '../contexts/RingsProvider'
+// import RingsProvider from '../contexts/RingsProvider'
 import SolanaProvider from '../contexts/SolanaProvider'
 import MultiWeb3Provider from '../contexts/MultiWeb3Provider'
 
@@ -77,7 +78,7 @@ export default function App({ Component, pageProps }: AppProps) {
     setReady(true);
   }, []);
 
-  useEffectOnce(() => {
+  useEffect(() => {
     if (typeof window !== 'undefined') {
       if ('serviceWorker' in navigator) {
         navigator.serviceWorker.register('sw.js')
@@ -86,39 +87,42 @@ export default function App({ Component, pageProps }: AppProps) {
               const sw = reg.installing || reg.waiting;
 
               sw.onstatechange = function() {
+                console.log(sw.state)
                 if (sw.state === 'installed') {
-                  onward();
+                  onward()
                 }
               };
-            } else if (reg.active) {
-              // onward()
-            }
+            } 
           }).catch(error => console.error(error))
 
         // SW installed.  Refresh page so SW can respond with SW-enabled page.
         const onward = () => {
           setTimeout(function () {
-            // window.location.reload()
-            router.push('/')
+            console.log(`onward`)
+            window.location.reload()
+            // router.push('/')
           }, 0)
         }
       }
     }
-  })
+  }, [])
 
   return (
     <ThemeProvider attribute='class' defaultTheme='light'>
-      {ready ? (
-      <WagmiConfig client={client}>
-        <SolanaProvider>
-          <MultiWeb3Provider>
-            <RingsProvider>
-              <Component {...pageProps} />
-              <Toaster />
-            </RingsProvider>
-          </MultiWeb3Provider>
-        </SolanaProvider>
-      </WagmiConfig>): null}
+      {
+        ready ? (
+        <WagmiConfig client={client}>
+          <RingsProvider>
+            <SolanaProvider>
+              <MultiWeb3Provider>
+                <Component {...pageProps} />
+                <Toaster />
+              </MultiWeb3Provider>
+            </SolanaProvider>
+          </RingsProvider>
+        </WagmiConfig>): 
+        null
+      }
 
       <Web3Modal projectId={projectId} ethereumClient={ethereumClient} />
     </ThemeProvider>
