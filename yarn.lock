@@ -1956,10 +1956,10 @@
   resolved "https://registry.yarnpkg.com/@ringsnetwork/rings-node/-/rings-node-0.2.5-dev-20230419.0.tgz#bb9aec3fae589d173c1acac872c2a9316185e70e"
   integrity sha512-16u9XFN7r9pKZOwIz3VB46cQbo8MsG26iwDhVBPK4btT3MBvnunLH4ZV3D5h1YqWM9RiptUj4qxxOBIB1TZQcQ==
 
-"@ringsnetwork/rings-provider@^0.1.0":
-  version "0.1.0"
-  resolved "https://registry.yarnpkg.com/@ringsnetwork/rings-provider/-/rings-provider-0.1.0.tgz#d47a7dd5b58e6a228fb335906c6e249561fe374c"
-  integrity sha512-vd3IueCc7/CO8fAMp5cMe9I7GAyyNIgndWYHmAXB56xnF1Eqhg9l0yWvk0RsujpvZRqqJA8sITS+2xF0V/7tcw==
+"@ringsnetwork/rings-provider@0.1.1":
+  version "0.1.1"
+  resolved "https://registry.yarnpkg.com/@ringsnetwork/rings-provider/-/rings-provider-0.1.1.tgz#01d4f21d50342673c71d1df1b4180dad8aaa766b"
+  integrity sha512-Vuub4wABJMJ3hs3rnKgcwHi+4Bc8rj5sTvtcRr9ipTAgHzJq+AfLLgayBWs7MrM1pbW5UakeTkWdMqaApIAAdA==
   dependencies:
     "@ringsnetwork/bns-util" "0.9.1"
     "@ringsnetwork/rings-node" "0.2.5-dev-20230419.0"
