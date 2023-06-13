@@ -1,17 +1,20 @@
 import { useEffect, useState, type EffectCallback } from 'react'
 import type { AppProps } from 'next/app'
-import { ThemeProvider } from 'next-themes'
 import { useRouter } from 'next/router'
+import dynamic from 'next/dynamic'
+import { ThemeProvider } from 'next-themes'
 
 import {
   EthereumClient,
   w3mConnectors,
   w3mProvider,
 } from "@web3modal/ethereum";
-import { Web3Modal } from "@web3modal/react";
+import { Web3Modal } from "@web3modal/react"
 
 import { WagmiConfig, createClient, configureChains, mainnet } from 'wagmi'
-import RingsProvider from '@ringsnetwork/rings-provider'
+// import { RingsProvider } from '@ringsnetwork/rings-provider'
+
+const RingsProvider = dynamic(() => import('@ringsnetwork/rings-provider').then(mod => mod.RingsProvider), { ssr: false })
  
 // import { publicProvider } from 'wagmi/providers/public'
  
@@ -50,16 +53,10 @@ const ethereumClient = new EthereumClient(client, chains);
 
 import { Toaster } from "@/components/ui/toaster"
 
-// import RingsProvider from '../contexts/RingsProvider'
 import SolanaProvider from '../contexts/SolanaProvider'
 import MultiWeb3Provider from '../contexts/MultiWeb3Provider'
 
 import '@/styles/globals.css'
-
-function useEffectOnce(effect: EffectCallback) {
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  useEffect(effect, [])
-}
 
 export default function App({ Component, pageProps }: AppProps) {
   const router = useRouter()

@@ -1,5 +1,6 @@
 import { useState, useEffect, createContext, useContext, useCallback } from 'react'
 import Image from 'next/image'
+import dynamic from 'next/dynamic'
 
 import {
   useAccount,
