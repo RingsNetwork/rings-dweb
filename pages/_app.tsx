@@ -12,9 +12,9 @@ import {
 import { Web3Modal } from "@web3modal/react"
 
 import { WagmiConfig, createClient, configureChains, mainnet } from 'wagmi'
-// import { RingsProvider } from '@ringsnetwork/rings-provider'
+import { RingsProvider } from '@ringsnetwork/rings-provider'
 
-const RingsProvider = dynamic(() => import('@ringsnetwork/rings-provider').then(mod => mod.RingsProvider), { ssr: false })
+// const RingsProvider = dynamic(() => import('@ringsnetwork/rings-provider').then(({ RingsProvider }) => RingsProvider), { ssr: false })
  
 // import { publicProvider } from 'wagmi/providers/public'
  
