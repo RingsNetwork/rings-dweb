@@ -120,14 +120,17 @@ const MultiWeb3Provider: React.FC<{ children: React.ReactNode }> = ({ children }
       setAccountName(formatAddress(address))
 
       const getEthereumSignature = async () => {
-        const unsignedInfo = createUnsignedInfo({ address })
-        const signed = await signMessage({
-          message: unsignedInfo.auth,
-        })
-        const signature = new Uint8Array(hexToBytes(signed))
-  
-        setUnsignedInfo(unsignedInfo)
-        setSignature(signature)
+        const unsignedInfo = createUnsignedInfo({ address, chain: Chain.ETHEREUM })
+
+        if (unsignedInfo) {
+          const signed = await signMessage({
+            message: unsignedInfo.auth,
+          })
+          const signature = new Uint8Array(hexToBytes(signed))
+    
+          setUnsignedInfo(unsignedInfo)
+          setSignature(signature)
+        }
       }
 
       getEthereumSignature()
@@ -140,11 +143,14 @@ const MultiWeb3Provider: React.FC<{ children: React.ReactNode }> = ({ children }
 
       const getSolanaSignature = async () => {
         const unsignedInfo =createUnsignedInfo({ address: pubKey, chain: Chain.SOLANA })
-        const data = new TextEncoder().encode(unsignedInfo.auth);
-        const signature = await wallet.signMessage(data, 'utf8');
-  
-        setUnsignedInfo(unsignedInfo)
-        setSignature(signature)
+
+        if (unsignedInfo) {
+          const data = new TextEncoder().encode(unsignedInfo.auth);
+          const signature = await wallet.signMessage(data, 'utf8');
+    
+          setUnsignedInfo(unsignedInfo)
+          setSignature(signature)
+        }
       }
 
       getSolanaSignature()
@@ -154,7 +160,7 @@ const MultiWeb3Provider: React.FC<{ children: React.ReactNode }> = ({ children }
       setSignature(null)
       setAddressType(ADDRESS_TYPE.DEFAULT)
     }
-  }, [address, wallet, connected, provider])
+  }, [address, wallet, connected, provider, createUnsignedInfo])
 
   return (
     <MultiWeb3Context.Provider
