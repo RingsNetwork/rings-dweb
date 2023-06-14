@@ -14,7 +14,7 @@ export interface HttpMessageProps {
   destination: string,
   method: string,
   path: string,
-  headers: any 
+  headers: any
 }
 export interface Chat_props {
   from: string,
@@ -36,7 +36,7 @@ interface RingsContext {
   connectByAddress: (address: string) => Promise<void>,
   createOffer: () => Promise<void>,
   answerOffer: (offer: any) => Promise<void>,
-  acceptAnswer: (transportId: any, answer: any) => Promise<void>,
+  acceptAnswer: (answer: any) => Promise<void>,
   turnUrl: string,
   setTurnUrl: (turnUrl: string) => void,
   nodeUrl: string,
@@ -212,7 +212,7 @@ const reducer = (state: StateProps, { type, payload }: { type: string, payload: 
           }
         },
       }
-    default: 
+    default:
       return state
   }
 }
@@ -243,7 +243,7 @@ const RingsProvider: React.FC<{ children: React.ReactNode }> = ({ children }) =>
   const [node, setNode] = useState('')
   const [nodeStatus, setNodeStatus] = useState('disconnected')
 
-  const [state, dispatch] = useReducer(reducer, { peerMap: {}, chatMap: {}, activePeers: [], activePeer: '' }) 
+  const [state, dispatch] = useReducer(reducer, { peerMap: {}, chatMap: {}, activePeers: [], activePeer: '' })
 
   const fetchPeers = useCallback(async () => {
     if (!client || status !== 'connected') {
@@ -278,7 +278,7 @@ const RingsProvider: React.FC<{ children: React.ReactNode }> = ({ children }) =>
 
   const findServiceNode = useCallback(async () => {
     if (!client || status !== 'connected') {
-      return 
+      return
     }
 
     if (node) {
@@ -387,9 +387,9 @@ const RingsProvider: React.FC<{ children: React.ReactNode }> = ({ children }) =>
     }
   }, [client])
 
-  const acceptAnswer = useCallback(async (transportId: any, answer: any) => {
+  const acceptAnswer = useCallback(async (answer: any) => {
     if (client && transportId) {
-      const result = await client.accept_answer(transportId, answer)
+      const result = await client.accept_answer(answer)
 
       return result
     }
@@ -411,7 +411,7 @@ const RingsProvider: React.FC<{ children: React.ReactNode }> = ({ children }) =>
     }
   }, [client, state, addressType])
 
-  const asyncSendMessage = useCallback((message: HttpMessageProps) => 
+  const asyncSendMessage = useCallback((message: HttpMessageProps) =>
     new Promise(async (resolve, reject) => {
       try {
         if (!client) {
@@ -432,7 +432,7 @@ const RingsProvider: React.FC<{ children: React.ReactNode }> = ({ children }) =>
         console.log(`txId`, txId)
 
         MESSAGE.current[txId as string] =  null
-    
+
         const interval = 5
 
         TIMER.current[txId as string] = setInterval(() => {
@@ -480,7 +480,7 @@ const RingsProvider: React.FC<{ children: React.ReactNode }> = ({ children }) =>
 
   useEffect(() => {
     findServiceNode()
-    
+
     const timer = setInterval(() => {
       if (node) {
         clearInterval(timer)
@@ -511,9 +511,9 @@ const RingsProvider: React.FC<{ children: React.ReactNode }> = ({ children }) =>
     if (account && wasm && turnUrl && nodeUrl && signature && unsignedInfo) {
       // console.log(`initClient`)
       debug(
-        // process.env.NODE_ENV === 'development' || 
+        // process.env.NODE_ENV === 'development' ||
         typeof window !== 'undefined' && window.localStorage.getItem('debug') !== null
-      ) 
+      )
       setStatus('connecting')
 
       const client = await Client.new_client(unsignedInfo, signature, turnUrl);
@@ -537,18 +537,18 @@ const RingsProvider: React.FC<{ children: React.ReactNode }> = ({ children }) =>
           console.log(`to`, to)
           console.groupEnd()
 
-          dispatch({ 
-            type: RECEIVE_MESSAGE, 
-            payload: { 
-              peer: from, 
-              message: { 
-                from, 
+          dispatch({
+            type: RECEIVE_MESSAGE,
+            payload: {
+              peer: from,
+              message: {
+                from,
                 to
-                // message: new TextDecoder().decode(message) 
-              } 
-            } 
+                // message: new TextDecoder().decode(message)
+              }
+            }
           })
-        }, 
+        },
         // http response message
         async (response: any, message: any) => {
           console.group('on http response message')
@@ -586,7 +586,7 @@ const RingsProvider: React.FC<{ children: React.ReactNode }> = ({ children }) =>
 
       await client.listen(callback)
 
-      const promises = nodeUrl.split(';').map(async (url: string) => 
+      const promises = nodeUrl.split(';').map(async (url: string) =>
         await client.connect_peer_via_http(url)
       )
 
