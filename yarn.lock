@@ -1605,19 +1605,18 @@
     ethers "^5.6.2"
     js-sha3 "^0.8.0"
 
-"@ringsnetwork/rings-node@0.2.5-dev-20230427.0":
-  version "0.2.5-dev-20230427.0"
-  resolved "https://registry.yarnpkg.com/@ringsnetwork/rings-node/-/rings-node-0.2.5-dev-20230427.0.tgz#0ac6f5f032f46109130f3a70143b78a352add02d"
-  integrity sha512-YIeNQA2LcNMpeXV9p9J47425eIo7tJuHJmz7quKipMfLbbRZ8BcC0xKoYLIRLI2zf1fDm4Tk2at6XOVh40cHvQ==
+"@ringsnetwork/rings-node@0.2.5-dev-20230516.0":
+  version "0.2.5-dev-20230516.0"
+  resolved "https://registry.yarnpkg.com/@ringsnetwork/rings-node/-/rings-node-0.2.5-dev-20230516.0.tgz#b9e927731e30dd112f9ce86430e7e25ca857fd0f"
+  integrity sha512-p1cPKYXzl3h7n+0FqaULBY+WZoIUDnqJwqnWLOM/JjZBOpfWbsQblZU7+aQVUlh/C/OLgTGdraoxj7w6+RRkKg==
 
-"@ringsnetwork/rings-provider@^0.2.3", "@ringsnetwork/rings-provider@^0.2.4":
-  version "0.2.4"
-  resolved "https://registry.yarnpkg.com/@ringsnetwork/rings-provider/-/rings-provider-0.2.4.tgz#4942afc4026f0bc6b59e095ce002734ab0f344bd"
-  integrity sha512-c1zJJmkV9iTZj72Hzf3m++lU1nAcOyjNWpkjV3atZMFRNJXRD9GngAeg+woJQHJJv5K8/YI9Ic1JMGF0fUMr4Q==
+"@ringsnetwork/rings-provider@^0.2.5":
+  version "0.2.5"
+  resolved "https://registry.yarnpkg.com/@ringsnetwork/rings-provider/-/rings-provider-0.2.5.tgz#43942486454222b894b6686a93a2e88ffaef4471"
+  integrity sha512-qa3q7oHGNgcDYwhMMdcfaj5g6Cc1E61INacJeBQOa54mvDeAKJFL1ZqsEYX/78HxzvzlrkJXQEeJDMgc9mTR8Q==
   dependencies:
     "@ringsnetwork/bns-util" "0.9.1"
-    "@ringsnetwork/rings-node" "0.2.5-dev-20230427.0"
-    "@ringsnetwork/rings-provider" "^0.2.3"
+    "@ringsnetwork/rings-node" "0.2.5-dev-20230516.0"
     react "^18.2.0"
     react-dom "^18.2.0"
 
