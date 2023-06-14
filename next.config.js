@@ -4,7 +4,7 @@ const pkg = require('./package.json')
 const nextConfig = {
   reactStrictMode: true,
   publicRuntimeConfig: {
-    ringsNodeVersion: '0.2.5-dev-20230419.0',
+    ringsNodeVersion: pkg.dependencies['@ringsnetwork/rings-node'],
     ringsChatVersion: pkg.version,
   },
   images: {

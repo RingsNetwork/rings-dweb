@@ -1,6 +1,5 @@
 import { useState, useEffect, createContext, useContext, useCallback } from 'react'
 import Image from 'next/image'
-import dynamic from 'next/dynamic'
 
 import {
   useAccount,
@@ -11,7 +10,7 @@ import {
 } from 'wagmi'
 import { signMessage } from 'wagmi/actions'
 
-import { useRings, Chain, UnsignedInfo } from '@ringsnetwork/rings-provider'
+import { UnsignedInfo } from '@ringsnetwork/rings-node'
 
 import { useWallet } from '../contexts/SolanaWalletProvider'
 import formatAddress from '../utils/formatAddress';
@@ -87,8 +86,6 @@ const MultiWeb3Provider: React.FC<{ children: React.ReactNode }> = ({ children }
 
   const { wallet, connected } = useWallet()
 
-  const { createUnsignedInfo } = useRings()
-
   const [account, setAccount] = useState('')
   const [chain, setChain] = useState('')
   const [signature, setSignature] = useState<Uint8Array | null>(null)
@@ -108,7 +105,6 @@ const MultiWeb3Provider: React.FC<{ children: React.ReactNode }> = ({ children }
     }
   }, [ensName, address])
 
-
   useEffect(() => {
     // console.group('multi')
     //   console.log(`ethereumAccount:`, address);
@@ -121,17 +117,14 @@ const MultiWeb3Provider: React.FC<{ children: React.ReactNode }> = ({ children }
       setAccountName(formatAddress(address))
 
       const getEthereumSignature = async () => {
-        const unsignedInfo = createUnsignedInfo({ address, chain: Chain.ETHEREUM })
-
-        if (unsignedInfo) {
-          const signed = await signMessage({
-            message: unsignedInfo.auth,
-          })
-          const signature = new Uint8Array(hexToBytes(signed))
-    
-          setUnsignedInfo(unsignedInfo)
-          setSignature(signature)
-        }
+        const unsignedInfo = new UnsignedInfo(address);
+        const signed = await signMessage({
+          message: unsignedInfo.auth,
+        })
+        const signature = new Uint8Array(hexToBytes(signed))
+  
+        setUnsignedInfo(unsignedInfo)
+        setSignature(signature)
       }
 
       getEthereumSignature()
@@ -143,15 +136,12 @@ const MultiWeb3Provider: React.FC<{ children: React.ReactNode }> = ({ children }
       setAddressType(ADDRESS_TYPE.ED25519)
 
       const getSolanaSignature = async () => {
-        const unsignedInfo =createUnsignedInfo({ address: pubKey, chain: Chain.SOLANA })
-
-        if (unsignedInfo) {
-          const data = new TextEncoder().encode(unsignedInfo.auth);
-          const signature = await wallet.signMessage(data, 'utf8');
-    
-          setUnsignedInfo(unsignedInfo)
-          setSignature(signature)
-        }
+        const unsignedInfo = UnsignedInfo.new_with_address(pubKey, ADDRESS_TYPE.ED25519);
+        const data = new TextEncoder().encode(unsignedInfo.auth);
+        const signature = await wallet.signMessage(data, 'utf8');
+  
+        setUnsignedInfo(unsignedInfo)
+        setSignature(signature)
       }
 
       getSolanaSignature()
@@ -161,7 +151,7 @@ const MultiWeb3Provider: React.FC<{ children: React.ReactNode }> = ({ children }
       setSignature(null)
       setAddressType(ADDRESS_TYPE.DEFAULT)
     }
-  }, [address, wallet, connected, provider, createUnsignedInfo])
+  }, [address, wallet, connected, provider])
 
   return (
     <MultiWeb3Context.Provider

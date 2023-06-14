@@ -1,21 +1,14 @@
 import { useEffect, useCallback, useState, useRef } from 'react';
 
 import { SpinnerRoundFilled, SpinnerDotted } from 'spinners-react'
-import { Settings } from 'lucide-react';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
 
 import Head from 'next/head'
 import Image from 'next/image';
 import getConfig from 'next/config';
 
 import { Web3Button } from "@web3modal/react"
-import { useRings, Status } from '@ringsnetwork/rings-provider'
 
+import useRings from '../hooks/useRings'
 import useMultiWeb3 from '../hooks/useMultiWeb3';
 
 import ThemeSwitch from '@/components/ThemeSwitch'
@@ -77,15 +70,8 @@ const LINKS: LinkProps[] = [
 ]
 
 export default function Home() {
-  const { account, unsignedInfo, signature } = useMultiWeb3()
-  const { 
-    ringsNodeClient, 
-    createRingsNodeClient, 
-    serviceNodeStatus, 
-    sendHttpRequest, 
-    clearCache
-  } = useRings()
-  
+  const { account, accountName, setOpen } = useMultiWeb3()
+  const { state, asyncSendMessage, node, nodeStatus } = useRings()
   const { toast } = useToast()
 
   const [loading, setLoading] = useState(false)
@@ -97,62 +83,46 @@ export default function Home() {
     }
   }, [])
 
-  const handleClearCache = useCallback(() => {
-    clearCache()
-
-    toast({
-      title: 'Cache cleared',
-      duration: 2000,
-    })
-  }, [clearCache, toast])
-
-  useEffect(() => {
-    if (!ringsNodeClient && account && unsignedInfo && signature) {
-      createRingsNodeClient({ 
-        unsignedInfo, 
-        signature, 
-        autoConnectServiceNode: true, 
-      })
-    }
-  }, [account, ringsNodeClient, unsignedInfo, signature, createRingsNodeClient])
-
   useEffect(() => {
     if (typeof window !== 'undefined' && 'serviceWorker' in navigator) {
       //listen to messages
       navigator.serviceWorker.onmessage = async (event) => {
-        // console.log(`event.data`, event.data)
-        if (
-          serviceNodeStatus === Status.CONNECTED && 
-          event.data.type === 'asyncSend'
-        ) {
+        console.log(`event.data`, event.data)
+        if (node && event.data.type === 'asyncSend') {
           let data
 
           switch (event.data.action) {
             case 'FETCH_UNISWAP_INDEX':
               // console.log(`receive message from sw`, event.data)
-              data = await sendHttpRequest({
+              data = await asyncSendMessage({
+                destination: node,
                 method: 'GET',
                 path: `${APP.uniswap}/index.html`,
                 headers: {}
               })
+              // console.log(`data`, JSON.parse(data))
               break
             case 'FETCH_UNISWAP_RESOURCE':
-              data = await sendHttpRequest({
+              data = await asyncSendMessage({
+                destination: node,
                 method: 'GET',
                 path: `${APP.uniswap}${event.data.path}`,
                 headers: {}
               })
+              // console.log(`data`, JSON.parse(data))
               break
             case 'FETCH_TORNADOCASH_INDEX':
               // console.log(`receive message from sw`, event.data)
-              data = await sendHttpRequest({
+              data = await asyncSendMessage({
+                destination: node,
                 method: 'GET',
                 path: `${APP['tornado.cash']}/index.html`,
                 headers: {}
               })
               break
             case 'FETCH_TORNADOCASH_RESOURCE':
-              data = await sendHttpRequest({
+              data = await asyncSendMessage({
+                destination: node,
                 method: 'GET',
                 path: `${APP['tornado.cash']}${event.data.path}`,
                 headers: {}
@@ -162,7 +132,6 @@ export default function Home() {
               data = []
               break
           }
-          // console.log(`data`, data)
 
           sendMsg({
             type: 'asyncResolved',
@@ -174,10 +143,11 @@ export default function Home() {
         }
       }
     }
-  }, [sendMsg, sendHttpRequest, serviceNodeStatus])
+  }, [sendMsg, state.peerMap, asyncSendMessage, node])
 
   const handleOpenInChrome = () => {
     const universalLink = `googlechrome://${encodeURIComponent(window.location.href)}`
+
 
     window.location.href = universalLink
   }
@@ -197,7 +167,7 @@ export default function Home() {
         // setOpen()
         document.querySelector('w3m-core-button')?.shadowRoot?.children[0]?.shadowRoot?.children[0]?.shadowRoot?.querySelector('button')?.click()
       } else {
-        if (serviceNodeStatus === Status.CONNECTED) {
+        if (nodeStatus === 'connected') {
           setActive(app)
           setLoading(true)
         } else {
@@ -210,7 +180,7 @@ export default function Home() {
       setActive(app)
       setLoading(false)
     }
-  }, [account, serviceNodeStatus, toast] )
+  }, [account, nodeStatus, toast] )
 
   const handleUniswapIframeOnload = useCallback(() => {
     setLoading(false)
@@ -252,26 +222,18 @@ export default function Home() {
           <div
             className="flex justify-between items-center border-b border-[var(--border-color)] p-[20px] h-[58px]"
           >
-            <div className='w-[160px] md:w-[228px] flex items-center'>
+            <div className='w-[180px] md:w-[228px] flex items-center'>
               <Image src={LOGO} alt="" />
             </div>
             <div className='flex items-center'>
               {
                 account ?
-                serviceNodeStatus === Status.CONNECTED ?
+                node && nodeStatus === 'connected' ?
                 <SpinnerRoundFilled size={45} thickness={45} speed={60} color="#36ad47" />:
                 <SpinnerRoundFilled size={45} thickness={45} speed={130} color="rgba(195, 40, 42, 1)" /> :
                 null
               }
               <Web3Button label="Connect Wallet" icon="hide" />
-              <DropdownMenu>
-                <DropdownMenuTrigger><Settings className='ml-2' size="18" /></DropdownMenuTrigger>
-                <DropdownMenuContent>
-                  <DropdownMenuItem>
-                    <Button onClick={handleClearCache} variant="link">Clear Cache</Button>
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
             </div>
             {/* {
               account ? 
