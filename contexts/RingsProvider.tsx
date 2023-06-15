@@ -388,7 +388,7 @@ const RingsProvider: React.FC<{ children: React.ReactNode }> = ({ children }) =>
   }, [client])
 
   const acceptAnswer = useCallback(async (answer: any) => {
-    if (client && transportId) {
+    if (client) {
       const result = await client.accept_answer(answer)
 
       return result
@@ -595,7 +595,7 @@ const RingsProvider: React.FC<{ children: React.ReactNode }> = ({ children }) =>
         setStatus('connected')
         // await client.connect_peer_via_http(nodeUrl)
       } catch (e) {
-        console.log('connect_peer_via_http error', e)
+        console.log('got connect_peer_via_http error', e)
       }
 
       return client
