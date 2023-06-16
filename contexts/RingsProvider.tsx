@@ -22,13 +22,6 @@ export interface Chat_props {
   message: string
 }
 
-// export interface NodePeer {
-//   address: string,
-//   state: string | undefined,
-//   transport_pubkey: string,
-//   transport_id: string,
-// }
-
 interface RingsContext {
   client: Client | null,
   fetchPeers: () => Promise<Peer[]>,
@@ -117,51 +110,6 @@ const reducer = (state: StateProps, { type, payload }: { type: string, payload: 
   // console.log('reducer', type, payload, state)
 
   switch (type) {
-    // case FETCH_PEERS:
-    //   const peerMap = state.peerMap
-    //   const chatMap = state.chatMap
-
-    //   const keys = Object.keys(state.peerMap)
-    //   const disconnectedPeers = keys.filter(key => !payload.peers.includes(key))
-
-    //   disconnectedPeers.forEach((address: string) => {
-    //     peerMap[address] = {
-    //       ...peerMap[address],
-    //       state: 'disconnected',
-    //     }
-    //   })
-
-    //   payload.peers.forEach(({ address, transport_pubkey, ...rest }: NodePeer) => {
-    //     const { type, address: _address} = getAddressWithType(transport_pubkey.startsWith('1') ? transport_pubkey.replace(/^1/, '') : address)
-
-    //     if (!state.peerMap[address]) {
-    //         peerMap[address] = {
-    //           ...rest,
-    //           transport_pubkey: transport_pubkey.replace(/^1/, ''),
-    //           address,
-    //           name: formatAddress(_address),
-    //           bns: '',
-    //           ens: '',
-    //           type,
-    //         }
-
-    //         chatMap[address] = {
-    //           messages: [],
-    //           status: ''
-    //         }
-    //     } else {
-    //       peerMap[address] = {
-    //         ...state.peerMap[address],
-    //         ...rest,
-    //       }
-    //     }
-    //   })
-
-    //   return {
-    //     ...state,
-    //     peerMap,
-    //     chatMap
-    //   }
     case CHANGE_NAME:
       return {
         ...state,
@@ -251,26 +199,6 @@ const RingsProvider: React.FC<{ children: React.ReactNode }> = ({ children }) =>
     }
 
     const peers = await client.list_peers()
-    // console.log(`peers`, peers)
-
-    // if (peers && peers.length) {
-    //   setNode(peers[0])
-    //   setNodeStatus(peers[0].state)
-    // }
-
-    // dispatch({ type: FETCH_PEERS, payload: { peers } })
-
-    // peers.forEach(({ address, state: status, transport_pubkey }: NodePeer) => {
-    //   const { type } = getAddressWithType(transport_pubkey.startsWith('1') ? transport_pubkey.replace(/^1/, '') : address)
-
-    //   let peer = address
-
-    //   if (type === ADDRESS_TYPE.ED25519) {
-    //     peer = transport_pubkey.replace(/^1/, '')
-    //   }
-
-    //   onlinerDispatch({ type: 'changeStatus', payload: { peer, status }})
-    // })
 
     return peers
   }, [client, status, //onlinerDispatch
@@ -577,10 +505,6 @@ const RingsProvider: React.FC<{ children: React.ReactNode }> = ({ children }) =>
         async (
           relay: any, prev: String,
       ) => {
-        // console.group('on builtin message')
-        // console.log(relay)
-        // console.log(prev)
-        // console.groupEnd()
       },
       )
 
