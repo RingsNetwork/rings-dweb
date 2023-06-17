@@ -192,7 +192,7 @@ export default function Home() {
     if (iframe) {
       const timer: ReturnType<typeof setInterval> = setInterval(() => {
         if (iframe.contentDocument) {
-          // document has a right padding 
+          // document has a right padding
           iframe.contentDocument.documentElement.style.overflowX = 'hidden'
 
           // @ts-ignore
@@ -236,7 +236,7 @@ export default function Home() {
               <Web3Button label="Connect Wallet" icon="hide" />
             </div>
             {/* {
-              account ? 
+              account ?
               <div className='flex items-center'>
                 {
                   node && nodeStatus === 'connected' ?
@@ -276,7 +276,7 @@ export default function Home() {
                 <div className='hidden md:block text-[var(--inactive-color)] mb-2 mt-5'>
                   dWeb
                 </div>
-                <div 
+                <div
                   className={`flex items-center md:my-1 py-2 px-3 mx-2 h-full md:mx-0 text-sm rounded-md cursor-pointer duration-300 hover:bg-[var(--hover-menu-bg)]${active === 'uniswap' ? ' bg-[var(--hover-menu-bg)]': ''}`}
                   onClick={() => handleSwitchApp('uniswap')}
                 >
@@ -314,21 +314,21 @@ export default function Home() {
                   </div>
                   <div className='grid grid-cols-1 gap-4 md:grid-cols-3'>
 
-                    <div className='p-5 text-base rounded-2xl border border-[var(--border-color)] bg-[var(--content-bg)]'> 
+                    <div className='p-5 text-base rounded-2xl border border-[var(--border-color)] bg-[var(--content-bg)]'>
                       <div>Decentralized P2P</div>
                       <div className='mt-5 text-sm font-normal'>
                         Rings Network is a peer-to-peer private communication network, enabling users to interact among Web3 and Web2 applications.
                       </div>
                     </div>
 
-                    <div className='p-5 text-base rounded-2xl border border-[var(--border-color)] bg-[var(--content-bg)]'> 
+                    <div className='p-5 text-base rounded-2xl border border-[var(--border-color)] bg-[var(--content-bg)]'>
                       <div>Works in Browsers</div>
                       <div className='mt-5 text-sm font-normal'>
                         Full features node SDK for all modern browsers. Connect a full node with your web page in a minute.
                       </div>
                     </div>
 
-                    <div className='p-5 text-base rounded-2xl border border-[var(--border-color)] bg-[var(--content-bg)]'> 
+                    <div className='p-5 text-base rounded-2xl border border-[var(--border-color)] bg-[var(--content-bg)]'>
                       <div>Private key as DID</div>
                       <div className='mt-5 text-sm font-normal'>
                         Works with all ECDSA chains and wallets. Works with secp256k1 chains(Ethereum, BSC, Avalanche, etc.), ed25519 chains(Solana, Aptos, etc.).
@@ -336,8 +336,8 @@ export default function Home() {
                     </div>
 
                     {
-                      LINKS.map(({ title, link }, index ) => 
-                        <div key={index} className='md:h-[166px] p-5 text-base rounded-2xl border border-[var(--border-color)] bg-[var(--content-bg)] hover:scale-[1.02] hover:bg-[var(--theme-bg-color)]'> 
+                      LINKS.map(({ title, link }, index ) =>
+                        <div key={index} className='md:h-[166px] p-5 text-base rounded-2xl border border-[var(--border-color)] bg-[var(--content-bg)] hover:scale-[1.02] hover:bg-[var(--theme-bg-color)]'>
                           <div className='w-full h-full'>
                             <a className='block w-full h-full' href={link} target="_blank" rel="noopener noreferrer">
                               {title}
@@ -347,7 +347,7 @@ export default function Home() {
                       )
                     }
 
-                    <div className='h-[100px] mb-5 md:mb-0 md:h-[166px] p-5 text-base rounded-2xl border border-[var(--border-color)] bg-[var(--content-bg)]'> 
+                    <div className='h-[100px] mb-5 md:mb-0 md:h-[166px] p-5 text-base rounded-2xl border border-[var(--border-color)] bg-[var(--content-bg)]'>
                       <div className='w-full h-full'>
                         Chrome Extension
                         <div className='mt-5 text-sm font-normal'>
@@ -367,7 +367,7 @@ export default function Home() {
               }
               {
                 active === 'tornadocash' ?
-                <iframe className='min-h-[calc(100vh-142px)] md:min-h-[calc(90vh-58px)] md:rounded-br-3xl' onLoad={handleIframeOnload} id="tornadocash" width="100%" height="100%" src="tornadocash"></iframe> :  
+                <iframe className='min-h-[calc(100vh-142px)] md:min-h-[calc(90vh-58px)] md:rounded-br-3xl' onLoad={handleIframeOnload} id="tornadocash" width="100%" height="100%" src="tornadocash"></iframe> :
                 null
               }
               {
@@ -380,7 +380,7 @@ export default function Home() {
               }
             </div>
           </div>
-        </div> 
+        </div>
 
         <ThemeSwitch />
       </main>

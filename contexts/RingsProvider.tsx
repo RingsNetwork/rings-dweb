@@ -357,8 +357,6 @@ const RingsProvider: React.FC<{ children: React.ReactNode }> = ({ children }) =>
           BigInt(5000),
           headers
         )
-        console.log(`txId`, txId)
-
         MESSAGE.current[txId as string] =  null
 
         const interval = 5
@@ -367,7 +365,6 @@ const RingsProvider: React.FC<{ children: React.ReactNode }> = ({ children }) =>
           if (MESSAGE.current[txId as string]) {
             clearInterval(TIMER.current[txId as string])
             delete TIMER.current[txId as string]
-
             resolve(MESSAGE.current[txId as string])
             delete MESSAGE.current[txId as string]
           }
@@ -444,12 +441,6 @@ const RingsProvider: React.FC<{ children: React.ReactNode }> = ({ children }) =>
       )
       setStatus('connecting')
 
-      const client = await Client.new_client(unsignedInfo, signature, turnUrl);
-      // console.log(`client`, client)
-      // @ts-ignore
-      window.ringsNodeClient = client
-      setClient(client)
-
       const callback = new MessageCallbackInstance(
         // custom message
         async (response: any, message: any) => {
@@ -484,8 +475,6 @@ const RingsProvider: React.FC<{ children: React.ReactNode }> = ({ children }) =>
           console.log(`txId`, tx_id)
           console.log(`message`, message)
           if (!MESSAGE.current[tx_id]) {
-            // const { http_server } = JSON.parse(new TextDecoder().decode(message))
-            // console.log(`json`, http_server)
             if (message) {
               const { body, headers, ...rest }: { body: any, headers: Map<string, string>} = message
               const parsedHeaders: {[key: string]: string} = {}
@@ -507,8 +496,12 @@ const RingsProvider: React.FC<{ children: React.ReactNode }> = ({ children }) =>
       ) => {
       },
       )
+      const client = await Client.new_client(unsignedInfo, signature, turnUrl, callback);
+      // @ts-ignore
+      window.ringsNodeClient = client
+      setClient(client)
 
-      await client.listen(callback)
+      await client.listen()
 
       const promises = nodeUrl.split(';').map(async (url: string) =>
         await client.connect_peer_via_http(url)
