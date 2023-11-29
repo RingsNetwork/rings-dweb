@@ -512,7 +512,7 @@ const RingsProvider: React.FC<{ children: React.ReactNode }> = ({ children }) =>
         setStatus('connected')
         // await client.connect_peer_via_http(nodeUrl)
       } catch (e) {
-        console.log('got connect_peer_via_http error', e)
+        console.error('got connect_peer_via_http error', e)
       }
 
       return client
@@ -539,11 +539,6 @@ const RingsProvider: React.FC<{ children: React.ReactNode }> = ({ children }) =>
       }
     }
   }, [account, wasm, turnUrl, nodeUrl, initClient])
-
-  useEffect(() => {
-    console.log("test effect", account)
-    console.log(account)
-  }, [account])
 
   return (
     <RingsContext.Provider
