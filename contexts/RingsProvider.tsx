@@ -175,7 +175,7 @@ interface TimerProps {
 
 const RingsProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const { getBNS } = useBNS()
-  const { account, unsignedInfo, signature, provider, addressType } = useMultiWeb3()
+  const { account, signer, provider, addressType } = useMultiWeb3()
 
   const [turnUrl, setTurnUrl] = useState('')
   const [nodeUrl, setNodeUrl] = useState('')
@@ -433,7 +433,7 @@ const RingsProvider: React.FC<{ children: React.ReactNode }> = ({ children }) =>
   }, [wasm])
 
   const initClient = useCallback(async() => {
-    if (account && wasm && turnUrl && nodeUrl && signature && unsignedInfo) {
+    if (account && wasm && turnUrl && nodeUrl) {
       // console.log(`initClient`)
       debug(
         // process.env.NODE_ENV === 'development' ||
@@ -496,7 +496,7 @@ const RingsProvider: React.FC<{ children: React.ReactNode }> = ({ children }) =>
       ) => {
       },
       )
-      const client = await Client.new_client(unsignedInfo, signature, turnUrl, callback);
+      const client = await new Client(turnUrl, 60, account, "eip191", signer, callback);
       // @ts-ignore
       window.ringsNodeClient = client
       setClient(client)
@@ -517,15 +517,15 @@ const RingsProvider: React.FC<{ children: React.ReactNode }> = ({ children }) =>
 
       return client
     }
-  }, [account, wasm, turnUrl, nodeUrl, signature, unsignedInfo])
+  }, [account, wasm, turnUrl, nodeUrl, signer])
 
   useEffect(() => {
     let client : Client | null = null
 
-    if (account && wasm && turnUrl && nodeUrl && signature && unsignedInfo) {
+    if (account && wasm && turnUrl && nodeUrl) {
       try {
         initClient().then(c => {
-          client = c
+          client = c!
         })
       } catch (e) {
         console.log(`error`, e)
@@ -538,7 +538,12 @@ const RingsProvider: React.FC<{ children: React.ReactNode }> = ({ children }) =>
         client.disconnect_all()
       }
     }
-  }, [account, wasm, turnUrl, nodeUrl, initClient, signature, unsignedInfo])
+  }, [account, wasm, turnUrl, nodeUrl, initClient])
+
+  useEffect(() => {
+    console.log("test effect", account)
+    console.log(account)
+  }, [account])
 
   return (
     <RingsContext.Provider
