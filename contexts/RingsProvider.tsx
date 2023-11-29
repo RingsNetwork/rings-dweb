@@ -27,9 +27,6 @@ interface RingsContext {
   fetchPeers: () => Promise<Peer[]>,
   sendMessage: (to: string, message: string) => Promise<void>,
   connectByAddress: (address: string) => Promise<void>,
-  createOffer: () => Promise<void>,
-  answerOffer: (offer: any) => Promise<void>,
-  acceptAnswer: (answer: any) => Promise<void>,
   turnUrl: string,
   setTurnUrl: (turnUrl: string) => void,
   nodeUrl: string,
@@ -65,9 +62,6 @@ export const RingsContext = createContext<RingsContext>({
   async fetchPeers(): Promise<Peer[]> { return []},
   sendMessage: async () => {},
   connectByAddress: async () => {},
-  createOffer: async () => {},
-  answerOffer: async () => {},
-  acceptAnswer: async () => {},
   turnUrl: '',
   setTurnUrl: () => {},
   nodeUrl: '',
@@ -299,30 +293,6 @@ const RingsProvider: React.FC<{ children: React.ReactNode }> = ({ children }) =>
     }
   }, [client])
 
-  const createOffer = useCallback(async () => {
-    if (client) {
-      const offer = await client.create_offer()
-
-      return offer
-    }
-  }, [client])
-
-  const answerOffer = useCallback(async (offer: any) => {
-    if (client && offer) {
-      const answer = await client.answer_offer(offer)
-
-      return answer
-    }
-  }, [client])
-
-  const acceptAnswer = useCallback(async (answer: any) => {
-    if (client) {
-      const result = await client.accept_answer(answer)
-
-      return result
-    }
-  }, [client])
-
   const disconnect = useCallback(async () => {
     const peers = Object.keys(state.peerMap)
 
@@ -547,9 +517,6 @@ const RingsProvider: React.FC<{ children: React.ReactNode }> = ({ children }) =>
         fetchPeers,
         sendMessage,
         connectByAddress,
-        createOffer,
-        answerOffer,
-        acceptAnswer,
         turnUrl,
         setTurnUrl,
         nodeUrl,
