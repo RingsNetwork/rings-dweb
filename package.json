@@ -44,6 +44,7 @@
     "spinners-react": "^1.0.7",
     "tailwind-merge": "^1.10.0",
     "tailwindcss-animate": "^1.0.5",
+    "uuid": "^9.0.1",
     "wagmi": "^0.12.12",
     "web3": "^1.7.3"
   },
