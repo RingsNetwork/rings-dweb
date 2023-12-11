@@ -1,6 +1,6 @@
 import { useEffect, useState, useCallback, createContext, useContext, useReducer, useRef } from 'react'
-
-import init, { Client, MessageCallbackInstance, debug } from '@ringsnetwork/rings-node'
+import { v4 as uuidv4 } from 'uuid';
+import init, { Provider, BackendContext, debug } from '@ringsnetwork/rings-node'
 
 import useMultiWeb3 from '../hooks/useMultiWeb3'
 import useBNS from '../hooks/useBNS';
@@ -346,23 +346,27 @@ const RingsProvider: React.FC<{ children: React.ReactNode }> = ({ children }) =>
           reject('Not Connected to Node')
         }
 
+	console.group('on sending message')
         console.log(`message`, message)
         const { destination, method, path, headers } = message
-
-        const txId = await client!.send_http_request(
+	const txId = uuidv4();
+        await client!.send_http_request(
           destination,
           'ipfs',
           method,
           path,
           BigInt(5000),
-          headers
+          headers,
+	  txId
         )
+	console.log(`txId`, txId)
         MESSAGE.current[txId as string] =  null
-
+	console.groupEnd()
         const interval = 5
 
         TIMER.current[txId as string] = setInterval(() => {
           if (MESSAGE.current[txId as string]) {
+	    console.log(`txid: {txId} mark solved`)
             clearInterval(TIMER.current[txId as string])
             delete TIMER.current[txId as string]
             resolve(MESSAGE.current[txId as string])
@@ -441,9 +445,28 @@ const RingsProvider: React.FC<{ children: React.ReactNode }> = ({ children }) =>
       )
       setStatus('connecting')
 
-      const callback = new MessageCallbackInstance(
+      const callback = new BackendContext(
+        // service message
+        async (ins: any, client: any, ctx: any, message: any) => {
+          console.group('on http response message')
+	  console.log("receive", ins, client, ctx, message)
+	  const resp = message.HttpResponse
+	  const tx_id = resp.rid;
+	  console.log(`txId`, tx_id)
+	  console.log(`message`, resp)
+	  if (!MESSAGE.current[tx_id]) {
+	    console.log(`solving txid: {txId}`)
+	    if (resp) {
+	      const { body, headers, ...rest }: { body: any, headers: Map<string, string>} = resp
+	      const parsedBody = new TextDecoder().decode(new Uint8Array(body))
+	      console.log(`push MESSAGE stack: {txId}`)
+	      MESSAGE.current[tx_id] = { ...rest, headers: headers, body: parsedBody, rawBody: body }
+	    }
+	  }
+          console.groupEnd()
+        },
         // custom message
-        async (response: any, message: any) => {
+        async (ins: any, client: any, response: any, message: any) => {
           console.group('on custom message')
           const { relay } = response
           console.log(`relay`, relay)
@@ -468,35 +491,12 @@ const RingsProvider: React.FC<{ children: React.ReactNode }> = ({ children }) =>
             }
           })
         },
-        // http response message
-        async (response: any, message: any) => {
-          console.group('on http response message')
-          const { tx_id } = response
-          console.log(`txId`, tx_id)
-          console.log(`message`, message)
-          if (!MESSAGE.current[tx_id]) {
-            if (message) {
-              const { body, headers, ...rest }: { body: any, headers: Map<string, string>} = message
-              const parsedHeaders: {[key: string]: string} = {}
-
-              for (const [key, value] of headers.entries()) {
-                parsedHeaders[key] = value
-              }
-
-              const parsedBody = new TextDecoder().decode(new Uint8Array(body))
-
-              // MESSAGE.current[tx_id] = JSON.stringify({ ...rest, headers: parsedHeaders, body: parsedBody, rawBody: body })
-              MESSAGE.current[tx_id] = { ...rest, headers: parsedHeaders, body: parsedBody, rawBody: body }
-            }
-          }
-          console.groupEnd()
-        },
         async (
-          relay: any, prev: String,
+          ins: any, client: any, relay: any, prev: String,
       ) => {
       },
       )
-      const client = await new Client(turnUrl, 60, account, "eip191", signer, callback);
+      const client = await new Provider(turnUrl, 60, account, "eip191", signer, callback);
       // @ts-ignore
       window.ringsNodeClient = client
       setClient(client)
