@@ -23,13 +23,10 @@ export interface Chat_props {
 }
 
 interface RingsContext {
-  client: Client | null,
+  client: Provider | null,
   fetchPeers: () => Promise<Peer[]>,
   sendMessage: (to: string, message: string) => Promise<void>,
   connectByAddress: (address: string) => Promise<void>,
-  createOffer: () => Promise<void>,
-  answerOffer: (offer: any) => Promise<void>,
-  acceptAnswer: (answer: any) => Promise<void>,
   turnUrl: string,
   setTurnUrl: (turnUrl: string) => void,
   nodeUrl: string,
@@ -65,9 +62,6 @@ export const RingsContext = createContext<RingsContext>({
   async fetchPeers(): Promise<Peer[]> { return []},
   sendMessage: async () => {},
   connectByAddress: async () => {},
-  createOffer: async () => {},
-  answerOffer: async () => {},
-  acceptAnswer: async () => {},
   turnUrl: '',
   setTurnUrl: () => {},
   nodeUrl: '',
@@ -185,7 +179,7 @@ const RingsProvider: React.FC<{ children: React.ReactNode }> = ({ children }) =>
 
   const [status, setStatus] = useState<string>('disconnected')
 
-  const [client, setClient] = useState<Client | null>(null)
+  const [client, setClient] = useState<Provider | null>(null)
   const [wasm, setWasm] = useState<any>(null)
 
   const [node, setNode] = useState('')
@@ -296,30 +290,6 @@ const RingsProvider: React.FC<{ children: React.ReactNode }> = ({ children }) =>
       console.log(`connect by address: ${address} ${type}`)
       await client.connect_with_address(address, type)
       console.log(`connected`)
-    }
-  }, [client])
-
-  const createOffer = useCallback(async () => {
-    if (client) {
-      const offer = await client.create_offer()
-
-      return offer
-    }
-  }, [client])
-
-  const answerOffer = useCallback(async (offer: any) => {
-    if (client && offer) {
-      const answer = await client.answer_offer(offer)
-
-      return answer
-    }
-  }, [client])
-
-  const acceptAnswer = useCallback(async (answer: any) => {
-    if (client) {
-      const result = await client.accept_answer(answer)
-
-      return result
     }
   }, [client])
 
@@ -520,7 +490,7 @@ const RingsProvider: React.FC<{ children: React.ReactNode }> = ({ children }) =>
   }, [account, wasm, turnUrl, nodeUrl, signer])
 
   useEffect(() => {
-    let client : Client | null = null
+    let client : Provider | null = null
 
     if (account && wasm && turnUrl && nodeUrl) {
       try {
@@ -552,9 +522,6 @@ const RingsProvider: React.FC<{ children: React.ReactNode }> = ({ children }) =>
         fetchPeers,
         sendMessage,
         connectByAddress,
-        createOffer,
-        answerOffer,
-        acceptAnswer,
         turnUrl,
         setTurnUrl,
         nodeUrl,

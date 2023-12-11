@@ -22,6 +22,7 @@
     "@solana/wallet-adapter-base": "^0.9.10",
     "@solana/wallet-adapter-phantom": "^0.9.9",
     "@solana/web3.js": "^1.50.1",
+    "@types/uuid": "^9.0.7",
     "@walletconnect/ethereum-provider": "^1.7.7",
     "@web3-react/core": "8.0.23-beta.0",
     "@web3-react/metamask": "8.0.19-beta.0",
