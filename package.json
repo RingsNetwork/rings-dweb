@@ -1,6 +1,6 @@
 {
   "name": "rings-delabs",
-  "version": "0.1.0",
+  "version": "0.4.2",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -18,7 +18,7 @@
     "@radix-ui/react-tabs": "^1.0.3",
     "@radix-ui/react-toast": "^1.1.3",
     "@ringsnetwork/bns-util": "0.9.1",
-    "@ringsnetwork/rings-node": "https://github.com/RingsNetwork/rings-node/releases/download/v0.2.7/rings-v0.2.7-wasm32-unknown-unknown.tgz",
+    "@ringsnetwork/rings-node": "https://github.com/RingsNetwork/rings-node/releases/download/v0.4.2/rings-v0.4.2-wasm32-unknown-unknown.tgz",
     "@solana/wallet-adapter-base": "^0.9.10",
     "@solana/wallet-adapter-phantom": "^0.9.9",
     "@solana/web3.js": "^1.50.1",
